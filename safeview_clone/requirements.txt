@@ -1,0 +1,16 @@
+django
+djangorestframework
+djangorestframework-xml
+pathlib
+coreapi
+futures
+pypcap
+pyshark
+netaddr
+netifaces
+networkx
+tabulate
+statistics
+future
+six
+python-nmap

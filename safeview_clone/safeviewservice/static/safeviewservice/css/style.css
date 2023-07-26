@@ -1,0 +1,461 @@
+
+p {
+    /*font-family: "Helvetica Neue", sans-serif;*/
+    font-size: 12pt;
+    color: #ffbb43
+}
+
+label {
+    /*font-family: "Helvetica Neue", sans-serif;*/
+    font-size: 8pt;
+}
+
+button {
+    /*font-family: "Helvetica Neue", sans-serif;*/
+    font-size: 7pt;
+}
+
+select {
+    /*font-family: "Helvetica Neue", sans-serif;*/
+    font-size: 8pt;
+}
+
+option {
+    /*font-family: "Helvetica Neue", sans-serif;*/
+    font-size: 7pt;
+}
+
+input {
+    /*font-family: "Helvetica Neue", sans-serif;*/
+    font-size: 8pt;
+    margin-bottom: 10px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+h3 {
+    padding: 12px;
+    background: #525252;
+    color: #ffbb43;
+}
+
+h4 {
+    padding: 12px 12px 12px 25px;
+    background: #212121;
+    color: #ffbb43;
+}
+
+h5 {
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+hr {
+    display: block;
+    border: 0;
+    border-top: 1px solid #313131;
+    padding: 0;
+}
+
+table {
+    font-size: 10px;
+    line-height: 10px;
+    width: 100%;
+}
+
+td, th {
+    width: 33.3%;
+}
+
+label {
+    margin-bottom: 10px;
+}
+
+body {
+    font-size: 12px;
+    height: 100%;
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    background-color: #242424;
+    border-right: 1px solid #111111;
+    font-family: "Open Sans Light", sans-serif;
+    font-weight: 300;
+    color: #999;
+    padding-left: 0;
+    padding-right: 0;
+    overflow-y: scroll;
+}
+
+.sidebar-subgroup {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.sidebar-button {
+    width: 100%;
+    text-align: left;
+    border: 0;
+    font-size: 8pt;
+}
+
+.form-control {
+    background-color: #313131;
+    border: #242424;
+    color: #999;
+}
+
+.form-control:focus {
+    border: #ffbb43;
+    box-shadow: inset 0 1px 1px #313131, 0 0 8px #ffbb43;
+}
+
+.btn {
+    margin: 10px 0px;
+    width: 100%;
+    background-color: #828282;
+    border-radius: 0;
+
+}
+
+.panel-title {
+    cursor: pointer;
+    border-left: 0;
+    border-right: 0;
+    border-top: 1px solid #313131;
+    border-bottom: 1px solid #313131;
+    padding: 10px 0 10px 10px;
+}
+
+a.panel-title-text {
+    font-size: 10pt;
+    font-weight: normal;
+    color: #ffbb43;
+    margin: 10px 0 10px 10px;
+    text-decoration: none;
+}
+
+.panel-title.caret {
+    display: inline-block;
+    padding-right: 5px;
+}
+
+.list-group {
+    background-color: #313131;
+    margin: 0;
+}
+
+.list-group-item {
+    cursor: pointer;
+    display: block;
+    color: #aaa;
+    background-color: #313131;
+    border-left: 0;
+    border-right: 0;
+    border-top: 1px solid #242424;
+    border-bottom: 1px solid #242424;
+    padding: 10px 10px 10px 30px;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.list-group-item:last-child {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.list-group-item:hover {
+    background-color: #212121;
+}
+
+.list-group-item.selected {
+    color: #313131;
+    background-color: #ffbb43;
+}
+
+.list-group-item.selected:hover {
+    background-color: #eeaa32;
+}
+
+.network {
+    background-color: #242424;
+}
+
+/*toolbar style*/
+.toolbar {
+    background-color: #242424;
+    position: relative;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: 0;
+    z-index: 1000;
+    font-family: "Open Sans Light", sans-serif;
+    font-weight: 300;
+    color: #999;
+    padding-left: 0;
+    padding-right: 0;
+    /*overflow-y: scroll;*/
+}
+
+.toolbar-title {
+    cursor: pointer;
+    padding: 0px 20px 0px 20px;
+}
+
+.toolbar-subgroup {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.toolbar-button {
+    width: 100%;
+    text-align: left;
+    border: 0;
+    font-size: 8pt;
+    padding-right: 2px;
+}
+
+.submit-button {
+    background-color: #eeaa32;
+    width: 95%;
+    border: 0;
+    font-size: 8pt;
+}
+
+.input-group {
+    padding-bottom: 2px;
+}
+
+.input-group-addon {
+    background-color: #313131;
+    border: #242424;
+    color: #999;
+    font-size: 10pt;
+}
+
+#collect-name {
+    background-color: #313131;
+    border: #242424;
+    color: #999;
+    padding-left: 2px;
+    padding-right: 15px;
+}
+
+#system-choice {
+    width: 100%;
+    font-size: 8pt;
+}
+
+#harm-choice {
+    margin: 0 -10px 0 0;
+    width: 100%;
+    font-size: 8pt;
+}
+
+
+
+#upload-choice {
+    width: 100%;
+    height: 25px;
+    font-size: 8pt;
+}
+
+#header {
+    margin: 0;
+    padding: 10px;
+    background: #313131;
+    color: #ffbb43
+}
+
+.sub-header {
+    padding: 15px;
+    background: #313131;
+    color: #ffbb43
+}
+
+#harm-upper {
+    background-color: #eee;
+}
+
+.node {
+    font-family: "Helvetica Neue", sans-serif;
+    font-size: 8pt;
+    color: #222;
+}
+
+circle {
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+path.hull {
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+.link {
+    stroke: #777;
+    stroke-opacity: .6;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    border-bottom: 1px solid #242424;
+    padding: 5px;
+    font: 'Roboto Condensed', 14px sans-serif;
+    border: 0px;
+    border-radius: 4px;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+}
+
+.tooltip_radar {
+    position: absolute;
+    text-align: center;
+    height: 28px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: #DDD;
+    border: 0px;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+#report_summary {
+    position: relative;
+    background: #313131;
+}
+
+.summary-group-item {
+    display: block;
+    color: #aaa;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    border-bottom: 1px solid #242424;
+}
+
+.well {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.atnode {
+    cursor: pointer;
+}
+
+.atnode circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+
+.atnode text {
+    font: 10px sans-serif;
+}
+
+.atlink {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
+}
+
+.container {
+    padding: 0px;
+    margin: 0px;
+}
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #313131;
+    color: #ffbb43;
+    padding: 10px 16px 10px 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #515151;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    /*height: 0;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    top: 50;
+    left: 0;
+    background-color: #313131;
+    overflow-y: hidden;
+    transition: 0.5s;
+    padding-top: 1px;
+    color: whiter;*/
+    display: none;
+    position: absolute;
+    background-color: #212121;
+    min-width: 200px;
+    min-height: 150px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    color: white;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    /*padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;*/
+    color: grey;
+    padding: 0px;
+    text-decoration: none;
+    display: block;
+}
+
+#_input {
+    padding: 30px 10px 10px 10px;
+
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    color: #f1f1f1
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {
+    display: block;
+}
+
+.dropdown-content .closebtn {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 30px;
+    margin-left: 50px;
+}

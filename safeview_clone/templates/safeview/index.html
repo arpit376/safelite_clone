@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Safelite Security Solution</title>
+
+    {% load static %}
+    <script language="JavaScript" type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/d3.tip.v0.6.3.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/helper.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/jquery-1.12.0.min.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/qv1.min.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/harm-graph.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/radarChart.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/basicSummary.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/attackTree.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/basicSummary.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/d3-context-menu/js/d3-context-menu.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/jQuery-contextMenu/jquery.contextMenu.min.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/generateReport.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/jspdf.min.js" %}"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="{% static "safeviewservice/scripts/jspdf.plugin.autotable.js" %}"></script>
+    <link rel="stylesheet" href="{% static "safeviewservice/scripts/d3-context-menu/css/d3-context-menu.css" %}"/>
+    <link rel="stylesheet" href="{% static "safeviewservice/scripts/jQuery-contextMenu/jquery.contextMenu.min.css" %}"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="{% static "safeviewservice/css/style.css" %}" rel="stylesheet">
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        {# THE SIDEBAR SECTION #}
+        <div class="col-sm-2 col-md-2 col-lg-2 sidebar">
+            <ul>
+                <li class="sidebar-group form-group">
+                    <h5 class="panel-title" data-toggle="collapse" href="#data-choice" aria-expanded="true">
+                        <a class="panel-title-text">
+                            Network
+                        </a>
+                    </h5>
+                <li class="sidebar-group form-group" id="data-choice">
+                    <h4 class="panel-title" data-toggle="collapse" href="#system-choice" aria-expanded="true">
+                        <a class="panel-title-text">
+                            {#                            <span class="caret"></span>#}
+                            Systems
+                        </a>
+                    </h4>
+                    <div id="system-choice" class="panel-collapse collapse in" aria-expanded="true">
+                        <ul class="list-group">
+                            {# System IDs populate this #}
+                        </ul>
+                    </div>
+
+                    <h4 class="panel-title" data-toggle="collapse" href="#harm-choice" aria-expanded="true">
+                        <a class="panel-title-text">
+                            Scans
+                        </a>
+                    </h4>
+                    <div id="harm-choice" class="panel-collapse collapse in" aria-expanded="true">
+                        <ul class="list-group">
+                            {# Harm IDs populate this #}
+                        </ul>
+                    </div>
+                </li>
+                </li>
+
+                <li class="sidebar-group form-group">
+                    <h5 class="panel-title">
+                        <a class="panel-title-text" href="#section2">
+                            Attack Trees
+                        </a>
+                    </h5>
+                </li>
+                <li class="sidebar-group form-group">
+                    <h5 class="panel-title" data-toggle="collapse" href="#host-choice" aria-expanded="true">
+                        <a class="panel-title-text" href="#section3">
+                            Summary Details
+                        </a>
+                    </h5>
+                    <div id="host-choice" class="panel-collapse collapse out" aria-expanded="true">
+                        <ul class="list-group">
+                            {# Host list #}
+                        </ul>
+                    </div>
+                </li>
+                <li class="sidebar-group">
+                    <h5 class="panel-title">
+                        <a class="panel-title-text">
+                            Query
+                        </a>
+                    </h5>
+                    <div class="sidebar-subgroup form-group">
+                        <label for="harm-query">Query host names:</label>
+                        <input id="harm-query" class="form-control" type="text" onchange="on_query_changes(this.value)">
+                    </div>
+                </li>
+                <li class="sidebar-group form-group">
+                    <h5 class="panel-title">
+                        <a class="panel-title-text" href="/">
+                            Cluster
+                        </a>
+                    </h5>
+                </li>
+            </ul>
+        </div>
+
+        {# THE CENTRAL CONTENT BODY / DASH BOARD #}
+        <div class="col-sm-10 col-sm-offset-2 col-md-10 col-md-offset-2 col-lg-10 col-lg-offset-2 main">
+            <div class="row network">
+                <h1 class="page-header" id="header">Network</h1>
+
+                <div id="content" class="container-fluid">
+                  <div class="dropdown">
+                    <button onclick="dropdownMenu('active')" class="dropbtn">Active (Nmap) <b class="caret"></b></button>
+                    <div id="active" class="dropdown-content">
+
+                      <a href="javascript:void(0)" class="closebtn" onclick="dropdownMenu('active')">&times;</a>
+                      <div id="_input">
+                          <label for="collect-name-2">Network Name:</label>
+                          <input id="collect-name-2" class="form-control" type="text">
+
+                          <label for="subnet">Subnet: </label>
+                          <input id="subnet" class="form-control" type="text">
+
+                          <label for="nmap_args">Nmap Arguments: </label>
+                          <input id="nmap_args" class="form-control" type="text">
+
+                          <button id="collect-data-2" type="button" class="btn btn-default btn-xs btn-block"
+                                  onclick="network_discovery()">Start Discovery
+                          </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="dropdown">
+                    <button onclick="dropdownMenu('passive')" class="dropbtn">Passive (Tiscovery) <b class="caret"></b></button>
+                    <div id="passive" class="dropdown-content">
+                      <a href="javascript:void(0)" class="closebtn" onclick="dropdownMenu('passive')">&times;</a>
+                      <div id="_input">
+                        <label for="collect-name">Network Name:</label>
+                        <input id="collect-name" class="form-control" type="text">
+
+                        <label for="collect-name">Time:</label>
+                        <select id="collect-duration" class="toolbar-button btn btn-primary btn-sm">
+                            <option value="30">30 sec</option>
+                            <option value="60">60 sec</option>
+                            <option value="120">2 min</option>
+                            <option value="300">5 min</option>
+                        </select>
+
+                        <button id="collect-data" type="button" class="btn btn-default btn-xs btn-block"
+                                onclick="toggle_data_collection()">Start Discovery
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="dropdown">
+                    <button onclick="dropdownMenu('manual')" class="dropbtn">Manual Configuration <b class="caret"></b></button>
+                    <div id="manual" class="dropdown-content">
+                      <a href="javascript:void(0)" class="closebtn" onclick="dropdownMenu('manual')">&times;</a>
+                      <div id="_input">
+                        <form action="/safeview/upload_file/" method="post"
+                              enctype="multipart/form-data"> {% csrf_token %}
+                            <input id="fileupload" type="file" name="files[]" single>
+                            <input type="submit" name="submit" value="Submit"
+                                   class="btn btn-default btn-xs btn-block fileinput-button"/>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="dropdown">
+                    <button id="scan_all" class="dropbtn" onclick="scan_all()">Vulnerability Scan All</button>
+                  </div>
+                  <div class="dropdown">
+                    <button onclick="dropdownMenu('analyse')" class="dropbtn">Analyse <b class="caret"></b></button>
+                    <div id="analyse" class="dropdown-content">
+                        <a href="javascript:void(0)" class="closebtn" onclick="dropdownMenu('analyse')">&times;</a>
+                        <div id="_input">
+                      <!------ Entry point setting ----------->
+                        <button type="button" class="btn btn-default btn-xs btn-block" data-toggle="modal" data-target="#entrypointmodal">
+                            Entry Points
+                        </button>
+                        <!--------- End entry point setting --------->
+                        <div class="input-group">
+                            <span class="input-group-addon">Top :</span>
+                            <input type="text" class="form-control" value="20" id="top-k-value">
+                            <span class="input-group-addon">%</span>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">Alpha:</span>
+                            <input type="text" class="form-control" value="0.5" id="alpha-value">
+                        </div>
+
+                        <button id="update_file" type="button" class="btn btn-default btn-xs btn-block"
+                                tabindex="10"
+                                onclick="update_file()">Analyse
+                        </button>
+
+                      </div>
+
+                    </div>
+                  </div>
+                  <div id="download_btn" class="dropdown">
+                    <button class="dropbtn">Download Report </button>
+                  </div>
+
+                  <div id="delete_file" class="dropdown">
+                    <button class="dropbtn" onclick="delete_file()">Delete Network</button>
+                  </div>
+
+                </div>
+                <div id="harm-upper" align="center" class="row"></div>
+              </div>
+
+            <div id="section2" class="row">
+                <h1 class="page-header" id="header">Attack Trees</h1>
+                <div id="attack_tree" align="center" class="row"></div>
+            </div>
+
+            <div id="section3" class="row">
+              <h1 class="page-header" id="header">Summary</h1>
+              <div class="col-sm-6 col-md-6 col-lg-6">
+                <h3>Radar Chart</h3>
+                <div id="radarChart" class="radarChart" align="center">
+                    {# RadarChart #}
+                </div>
+              </div>
+
+                <div id="report_summary" class="col-sm-6 col-md-6 col-lg-6">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="entrypointmodal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Attacker Entry Points</h4>
+      </div>
+      <div class="modal-body">
+          <textarea class="form-control" rows="5" placeholder="Default: All" id="entrypoints"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script language="JavaScript">
+    var $content = $("#content");
+    var upper_width = $content.width() - 4, upper_height = 600;
+    var lower_width = $content.width() - 40, lower_height = 600;
+
+    var harm_graph;
+    var basic_summary;
+
+    /**
+     * Promise based XHR for requesting the existing systems on the server, in assumed XML format.
+     */
+    function request_systems() {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                dataType: "xml",
+                url: "/safeview/systems/",
+                success: function (xml, status, xhr) {
+                    var $systems = $(xml).find("systems");
+                    sessionStorage["systems"] = $xml_to_string($systems);
+                    resolve($systems);
+                }
+            })
+        });
+    }
+
+    /**
+     * Promised wrapped XHR for requesting the ids of the harms in a particular system from the server,
+     * in an assumed XML format.
+     */
+    function request_system(system_id) {
+        return new Promise(function (resolve, reject) {
+            request_systems().then(function ($systems) {
+                var $system = $systems.find("system[ id = '" + system_id + "' ]");
+                if ($system.children().length != 0) {
+                    resolve($system);
+                } else {
+                    $.ajax({
+                        dataType: "xml",
+                        url: "/safeview/systems/" + system_id + "/",
+                        success: function (xml, status, xhr) {
+                            // Add each harm to the local system
+                            $(xml).find("harm").each(function () {
+                                $system.append(this);
+                            });
+                            // update session storage - really wish this line wasn't so ugly
+                            sessionStorage["systems"] = $xml_to_string($systems);
+                            resolve($system);
+                        }
+                    })
+                }
+            });
+        });
+    }
+
+    /**
+     * A promise wrapped XHR for retrieving a full XML HARM from either session storage or server side.
+     */
+    function request_harm(system_id, harm_id) {
+        return new Promise(function (resolve, reject) {
+            request_system(system_id).then(function ($system) {
+                // Query for locally stored harm record
+                var $harm = $system.find("harm[ id = '" + harm_id + "' ]");
+                // ..check if it's content has been populated (<nodes><edges><upperLayers>)
+                if ($harm.children().length != 0) {
+                    resolve($harm);
+                } else {
+                    $.ajax({
+                        dataType: "xml",
+                        url: "/safeview/harms/" + system_id + "/" + harm_id + "/",
+                        success: function (xml, status, xhr) {
+                            var $xml = $(xml);
+                            $harm.append($xml.find('nodes'));
+                            $harm.append($xml.find('edges'));
+                            $harm.append($xml.find('upperLayers'));
+                            $harm.append($xml.find('summaries'));
+                            $harm.append($xml.find('psv_hybrid'));
+                            $harm.append($xml.find('summaries_patched'));
+                            // Update local storage
+                            var $systems = string_to_$xml(sessionStorage["systems"]);
+                            $systems.find("system[ id = '" + system_id + "' ]").replaceWith($system);
+                            sessionStorage["systems"] = $xml_to_string($systems);
+                            resolve($harm);
+                        }
+                    });
+                }
+            });
+        })
+    }
+
+    /**
+     * A promise wrapped XHR for retrieving a full XML HARM from either session storage or server side.
+     */
+    function request_host(system_id, harm_id, host_id) {
+        return new Promise(function (resolve, reject) {
+            request_harm(system_id, harm_id).then(function ($harm) {
+                // Query for locally stored harm record
+                var $host = $harm.find("node[ name = '" + host_id + "' ]");
+                // ..check if it's content has been populated ()
+                if ($host.children().length != 0) {
+                    resolve($host);
+                } else {
+                    $.ajax({
+                        dataType: "xml",
+                        url: "/safeview/harms/" + system_id + "/" + harm_id + "/",
+                        success: function (xml, status, xhr) {
+                            var $xml = $(xml);
+                            $host.append($xml.find('vulnerabilities'));
+                            // Update local storage
+                            var $harms = string_to_$xml(sessionStorage["harms"]);
+                            $harms.find("harm[ id = '" + harm_id + "' ]").replaceWith($harm);
+                            sessionStorage["harms"] = $xml_to_string($harms);
+                            resolve($host);
+                        }
+                    });
+                }
+            });
+        })
+    }
+
+    function populate_system_ids() {
+        return new Promise(function (resolve, reject) {
+            request_systems().then(function ($systems) {
+                $systems.find('system').each(function () {
+                    var system_id = $(this).attr('id');
+                    // populate the system-choice
+                    var $system_item = $("<li></li>")
+                        .addClass("list-group-item")
+                        .val(system_id)
+                        .text(system_id)
+                        .click(on_system_selected);
+                    $("#system-choice").find("ul").append($system_item);
+                });
+                resolve();
+            })
+        });
+    }
+
+    function populate_harm_ids(system_id) {
+        return new Promise(function (resolve, reject) {
+            request_system(system_id).then(function ($system) {
+                // Drop the existing options
+                var $harm_choice = $("#harm-choice");
+                $harm_choice.find("li").remove();
+                $system.find('harm').each(function () {
+                    var harm_id = $(this).attr('id');
+                    // populate the harm-choice
+                    var $harm_item = $("<li></li>")
+                        .addClass("context-menu-one list-group-item")
+                        .val(harm_id)
+                        .text(harm_id)
+                        .click(on_harm_selected);
+                    $harm_choice.find("ul").append($harm_item);
+                });
+                $harm_choice.find("li").first().addClass("selected");
+                resolve();
+            });
+        });
+    }
+
+    function host_ids(system_id, harm_id) {
+        return new Promise(function (resolve, reject) {
+            request_harm(system_id, harm_id).then(function ($harm) {
+                // Drop the existing options
+                var $host_choice = $("#host-choice");
+                $host_choice.find("li").remove();
+                $harm.find('node').each(function () {
+                    var host_name = $(this).attr('name');
+                    if (host_name.indexOf("error") !== -1) {
+                        return;
+                    }
+                    if (host_name.indexOf("timeout") !== -1) {
+                        return;
+                    }
+                    // populate the harm-choice
+                    var $host_item = $("<li></li>")
+                        .addClass("list-group-item")
+                        .val(host_name)
+                        .text(host_name)
+                        .click(on_host_selected);
+                    $host_choice.find("ul").append($host_item);
+                });
+                resolve();
+            });
+        });
+    }
+
+    function on_system_selected() {
+        $("#system-choice").find(".selected").removeClass("selected");
+        var $selected_system = $(this);
+        $selected_system.addClass("selected");
+        return new Promise(function (resolve, reject) {
+            var system_id = $selected_system.text();
+            populate_harm_ids(system_id).then(function () {
+                var $first_harm = $("#harm-choice").find("li").first();
+                $.proxy(on_harm_selected, $first_harm[0])();
+            });
+            resolve();
+        });
+    }
+
+    function on_harm_selected() {
+        var $harm_choice = $("#harm-choice");
+        $harm_choice.find(".selected").removeClass("selected");
+        var $selected_harm = $(this);
+        $selected_harm.addClass("selected");
+        $('#harm-choice').contextMenu({
+            selector: 'li',
+            callback: function (key, options) {
+                if (key === "delete") {
+                    $.ajax({
+                        type: "post",
+                        url: "/safeview/delete/",
+                        data: {
+                            system: $("#system-choice").find(".selected").text(),
+                            harm: arguments[1].$trigger.text()
+                        },
+                        success: function () {
+                            location.reload();
+                        },
+                        error: function () {
+                            console.log(arguments);
+                        }
+                    });
+                }
+            },
+            items: {
+                "delete": {name: "Delete"}
+            }
+        });
+        return new Promise(function (resolve, reject) {
+            var system_id = $("#system-choice").find(".selected").text();
+            var harm_id = $selected_harm.text();
+            $("#collect-name").val(harm_id);
+            request_harm(system_id, harm_id).then(function ($harm) {
+                // Remove the old harm.
+                $("#harm-upper").find("svg").remove();
+
+                var d3$upper_svg = d3.select("#harm-upper")
+                    .append("svg")
+                    .attr("height", upper_height)
+                    .attr("width", upper_width);
+
+                //harm_upper(harm, upper_svg, upper_width, upper_height, -300, on_node_clicked);
+                harm_graph = new HarmGraph(d3$upper_svg, upper_width, upper_height);
+                harm_graph.addEntireHarm($harm);
+                harm_graph.initialise();
+
+                //Get the data from harm to generate radarChart
+                var data = [];
+                var $hosts = $harm.find('nodes');
+                var $summaries = $harm.find('summaries');
+                var $summaries_p = $harm.find('summaries_patched');
+                var risk = 0, cost = 0, probs = 0, pathNum = 0, vulnerNum = 0, psvNum = 0,
+                    risk_p = 0, cost_p = 0, probs_p = 0, pathNum_p = 0;
+                vulnerNum = $hosts.find('vulnerability').length;
+                psvNum = $harm.find('psv_tuple').length;
+                if ($summaries.length > 0) {
+                    $summaries.find('summary').each(function (index) {
+                        $summary = $(this);
+                        if ($summary.attr('name') == "Risk") {
+                            risk = parseFloat($summary.attr('value'));
+                        } else if ($summary.attr('name') == "Cost") {
+                            cost = parseFloat($summary.attr('value'));
+                        } else if ($summary.attr('name') == "Probability of attack success") {
+                            probs = parseFloat($summary.attr('value'));
+                        } else if ($summary.attr('name') == "Number of Attack Paths") {
+                            pathNum = parseFloat($summary.attr('value'));
+                        };
+                    });
+                    $summaries_p.find('summary').each(function (index) {
+                        $summary_p = $(this);
+                        if ($summary_p.attr('name') == "Risk") {
+                            risk_p = parseFloat($summary_p.attr('value'));
+                        } else if ($summary_p.attr('name') == "Cost") {
+                            cost_p = parseFloat($summary_p.attr('value'));
+                        } else if ($summary_p.attr('name') == "Probability of attack success") {
+                            probs_p = parseFloat($summary_p.attr('value'));
+                        } else if ($summary_p.attr('name') == "Number of Attack Paths") {
+                            pathNum_p = parseFloat($summary_p.attr('value'));
+                        }
+                        ;
+                    });
+
+                    data.push(
+                        [
+                            {axis: "Number of Attack Paths(k)", value: Number((pathNum).toFixed(2)) / 1000},
+                            {axis: "Risk of HARM", value: Number((risk).toFixed(2))},
+                            {axis: "Cost of Attack", value: Number((cost).toFixed(2))},
+                            {axis: "Probability of attack success(%)", value: Number((probs).toFixed(2)) * 100},
+                            {axis: "Number of vulnerabilities", value: Number(vulnerNum)}]);
+                    data.push(
+                        [
+                            {axis: "Number of Attack Paths(k)", value: Number((pathNum_p).toFixed(2)) / 1000},
+                            {axis: "Risk of HARM", value: Number((risk_p).toFixed(2))},
+                            {axis: "Cost of Attack", value: Number((cost_p).toFixed(2))},
+                            {axis: "Probability of attack success(%)", value: Number((probs).toFixed(2)) * 100},
+                            {axis: "Number of vulnerabilities", value: Number(vulnerNum) - Number(psvNum)}]);
+                } else {
+                    var impact = 0, probs = [];
+                    $hosts.find('node').each(function (index) {
+                        var $host = $(this);
+                        var $values = $host.find('host_values');
+                        var _impact = parseFloat($values.find('impact').text());
+                        if (!_impact) {
+                            _impact = 0;
+                        }
+                        var _prob = parseFloat($values.find('probability').text());
+                        if (!_prob) {
+                            _prob = 0;
+                        }
+                        var _cost = parseFloat($values.find('cost').text());
+                        if (!_cost) {
+                            _cost = 0;
+                        }
+                        impact += _impact;
+                        probs.push(_prob);
+                        cost += _cost;
+                    });
+                    var _prob = probs.length === 0 ? 0 : probs.splice(0, 1);
+                    probs.forEach(function (p) {
+                        _prob = _prob + p - _prob * p;
+                    })
+                    risk = impact * _prob;
+                    data.push([
+                        {axis: "Impact", value: Number((impact).toFixed(2))},
+                        {axis: "Risk of HARM", value: Number((risk).toFixed(2))},
+                        {axis: "Cost of Attack", value: Number((cost).toFixed(2))},
+                        {axis: "Probability of attack success(%)", value: Number((_prob).toFixed(2)) * 100}]);
+                };
+
+                RadarChart(".radarChart", data);
+                //fill the data in to summary
+                $("#report_summary").find("div").remove();
+                $("#report_summary").find('h3').remove();
+                var $report_header = $("<h3></h3>")
+                    .addClass("header")
+                    .val("report_info")
+                    .text("  Report information");
+                $("#report_summary").append($report_header);
+                var $report_table = $("<div></div>")
+                    .addClass("summaryTable")
+                $("#report_summary").append($report_table);
+                basic_summary = new Summary($harm);
+                var summaryList = basic_summary.metricsSummary();
+                var summaryList_p = basic_summary.metricsSummary_p();
+                var hostList = basic_summary.highVulnerHost(10);
+                var highPoeList = basic_summary.highScoreVulner(0.5);
+                var psvList = basic_summary.getPsvList();
+                $(".summaryTable").find("div").remove();
+                SummaryTable(".summaryTable", "Metrics Summary", summaryList);
+                if (summaryList_p.length > 0) {
+                    SummaryTable(".summaryTable", "Metrics Summary after 20% vulnerabilities patched", summaryList_p);
+                };
+                if (psvList.length > 0) {
+                    SummaryTable(".summaryTable", "The 20% vulnerabilities should be patched first.", psvList);
+                };
+                if (hostList.length > 0) {
+                  SummaryTable(".summaryTable", "The top 10 most vulnerable host", hostList);
+                };
+                if (highPoeList.length > 0) {
+                    SummaryTable(".summaryTable", "The vulnerabilities with high Probability Of Exploitation", highPoeList);
+                };
+                AttackTree("#attack_tree", $harm, harm_id);
+                host_ids(system_id, harm_id);
+                resolve();
+            });
+        });
+    }
+
+
+    $('#download_btn').click(function () {
+        var $selected_harm = $("#harm-choice").find(".selected");
+        var system_id = $("#system-choice").find(".selected").text();
+        var harm_id = $selected_harm.text();
+        $("#collect-name").val(harm_id);
+        request_harm(system_id, harm_id).then(function ($harm) {
+            console.log("createPDF");
+            createPDF($harm, harm_id);
+        });
+    });
+
+
+    function on_host_selected() {
+        var $host_choice = $("#host-choice");
+        $host_choice.find(".selected").removeClass("selected");
+        var $selected_host = $(this);
+        $selected_host.addClass("selected");
+        return new Promise(function (resolve, reject) {
+            var system_id = $("#system-choice").find(".selected").text();
+            var harm_id = $("#harm-choice").find(".selected").text();
+            var host_id = $selected_host.text();
+            request_host(system_id, harm_id, host_id).then(function ($host) {
+                var $values = $host.find('host_values');
+                var impact = parseFloat($values.find('impact').text());
+                var risk = parseFloat($values.find('risk').text());
+                var cost = parseFloat($values.find('cost').text());
+                var probability = parseFloat($values.find('probability').text());
+                var data = [[
+                    {axis: "Impact", value: Number((impact).toFixed(2))},
+                    {axis: "Risk", value: Number((risk).toFixed(2))},
+                    {axis: "Cost", value: Number((cost).toFixed(2))},
+                    {axis: "Probability", value: Number((probability).toFixed(2))}]];
+                RadarChart(".radarChart", data);
+                //Generate report content
+                $("#report_summary").find("div").remove();
+                $("#report_summary").find('h3').remove();
+                var $report_header = $("<h3></h3>")
+                    .addClass("header")
+                    .val("vulnerabilities")
+                    .text("Report information");
+                $("#report_summary").append($report_header);
+                var $report_table = $("<div></div>")
+                    .addClass("summaryTable")
+                $("#report_summary").append($report_table);
+                host_summary = new HostSummary($host);
+                var summaryList = host_summary.hostStaticSummary();
+                var vulnersList = host_summary.vulnerList();
+                $(".summaryTable").find("div").remove();
+                SummaryTable(".summaryTable", "Metrics Summary", summaryList);
+                SummaryTable(".summaryTable", "The vulnerabilities of the host", vulnersList);
+                resolve();
+            });
+        });
+    }
+
+    function on_query_changes(query) {
+        var d3$nodes = d3.selectAll(".node");
+        d3$nodes.attr("opacity", 0.3);
+        d3$nodes.filter(function (node) {
+            return node.name.includes(query);
+        }).attr("opacity", 1);
+        d3$nodes.filter(function (node) {
+            return node.id.includes(query);
+        }).attr("opacity", 1);
+        d3$nodes.filter(function (node) {
+            if (node.impact >= parseFloat(query)) {
+                return node;
+            }
+        }).attr("opacity", 1);
+
+        var d3$links = d3.selectAll(".link");
+        d3$links.attr("opacity", 0.3);
+        d3$links.filter(function (link) {
+            return link.source.name.includes(query) && link.target.name.includes(query);
+        })
+    }
+
+    function string_to_$xml(string) {
+        return $((new DOMParser()).parseFromString(string, 'text/xml'));
+    }
+
+    function $xml_to_string($xml) {
+        return (new XMLSerializer()).serializeToString($xml[0]);
+    }
+
+    function scan_all() {
+        $.ajax({
+            type: "post",
+            url: "/safeview/scan_all/",
+            data: {
+                system_id: $("#system-choice").find(".selected").text(),
+                name: $("#collect-name").val(),
+            },
+            success: function () {
+              location.reload();
+            },
+            error: function () {
+                console.log(arguments);
+            }
+        });
+    }
+
+    function update_file() {
+        $.ajax({
+            type: "post",
+            url: "/safeview/update_file/",
+            data: {
+                system_id: $("#system-choice").find(".selected").text(),
+                name: $("#collect-name").val(),
+                entry_points: $("#entrypoints").val(),
+                percent: $("#top-k-value").val(),
+                alpha: $("#alpha-value").val()
+            },
+            success: function () {
+              location.reload();
+            },
+            error: function () {
+                console.log(arguments);
+            }
+        });
+    }
+
+    function delete_file() {
+        $.ajax({
+            type: "post",
+            url: "/safeview/delete_file/",
+            data: {
+                system_id: $("#system-choice").find(".selected").text(),
+                name: $("#collect-name").val(),
+            },
+            success: function () {
+              location.reload();
+            },
+            error: function () {
+                console.log(arguments);
+            }
+        });
+    }
+
+    function network_discovery() {
+        $.ajax({
+            type: "post",
+            url: "/safeview/network_discovery/",
+            data: {
+                name: $("#collect-name-2").val(),
+                system_id: $("#system-choice").find(".selected").text(),
+                scan_type: 1,
+                filter: $("#subnet").val(),
+                args: $("#nmap_args").val()
+            }
+        })
+    }
+
+    function toggle_data_collection() {
+        var duration = parseInt($("#collect-duration option:selected").val());
+        $.ajax({
+            type: "post",
+            url: "/safeview/toggle/",
+            data: {
+                duration: duration,
+                system_id: $("#system-choice").find(".selected").text(),
+                name: $("#collect-name").val()
+            },
+            success: function () {
+            },
+            error: function () {
+                console.log(arguments);
+            }
+        });
+
+        $("#collect-data").text("Discovering...");
+        $("#collect-data").prop('disabled', true);
+        setTimeout(function () {
+            $("#collect-data").text("Start Discovery");
+            $("#collect-data").prop('disabled', false);
+            alert("Discovery Completed");
+        }, duration * 1000);
+    }
+
+    // TODO: Should it be really be initially hidden?
+    $("#harm-lower").hide();
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            }
+        }
+    });
+
+    populate_system_ids().then(function () {
+        var $selected_system = $("#system-choice").find("li").first();
+        $selected_system.addClass("selected");
+        var system_id = $selected_system.text();
+        if (system_id !== null) {
+            populate_harm_ids(system_id).then(function () {
+                var $first_harm = $("#harm-choice").find("li").first();
+                $.proxy(on_harm_selected, $first_harm[0])();
+            });
+        }
+    });
+
+    /* When the user clicks on the left navigation menu,
+    the page will scroll to the related content */
+
+    $('a[href*="#"]:not([href="#"]):not([href="#show"]):not([href="#hide"])').click(function () {
+        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+            var target = $(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+            if (target.length) {
+                $('html,body').animate({
+                    scrollTop: target.offset().top
+                }, 1000);
+                return false;
+            }
+        }
+    });
+
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function dropdownMenu(name) {
+        document.getElementById(name).classList.toggle("show");
+    }
+
+</script>
+</body>
+</html>
